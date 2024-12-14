@@ -23,3 +23,18 @@ P.s. нужно портировать на андроид винду линук
 создана одна переписка на локальном ip. 
 можно вводить никнейм.
 все сообщения сохраняются в db.json 
+
+#чуть чуть о том что написал я (elka_official)
+писал с помощью фласк в питоне!
+В папке templates есть form.html. в нем лежит код для отрисовки сайта. При запуске программы вы увидите сообщение:
+* Serving Flask app 'main'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://26.98.190.163:8080
+Press CTRL+C to quit
+для подключения к сайту допишите к любому ip выше /chat
+в папке db.json будут храниться все сообщения с данными например: {"messages": [{"author": "elka", "text": "test ", "time": "13:42:33"}]}
+в main.py общий код который связывает все воедино. в коде есть коментарии.
+все всем удачи)
