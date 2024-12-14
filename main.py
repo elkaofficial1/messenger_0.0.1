@@ -35,7 +35,7 @@ def save_message():
 
 @app.route("/")  # Эндпоинт начальной страницы
 def main_page():
-    return "Hello Skillbox"
+    return "ты вообще читал README.md ? напиши /chat к ссылке и проходи"
 
 @app.route("/chat")
 def chat_page():
