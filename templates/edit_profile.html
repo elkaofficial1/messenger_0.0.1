@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать профиль</title>
+</head>
+<body>
+    <h1>Редактировать профиль</h1>
+    <form method="POST" action="/edit_profile">
+        <input type="text" name="first_name" placeholder="Имя" value="{{ user_info.first_name }}" required>
+        <input type="text" name="last_name" placeholder="Фамилия" value="{{ user_info.last_name }}" required>
+        <input type="number" name="age" placeholder="Возраст" value="{{ user_info.age }}" required>
+        <textarea name="about_me" placeholder="О себе">{{ user_info.about_me }}</textarea>
+        <button type="submit">Сохранить изменения</button>
+    </form>
+    <a href="{{ url_for('user_profile', username=session['username']) }}">Отмена</a>
+</body>
+</html>

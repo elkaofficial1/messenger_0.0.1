@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Чаты</title>
+</head>
+<body>
+    <h1>Ваши чаты</h1>
+    <ul>
+        {% for chat in chats %}
+        <li><a href="{{ url_for('view_chat', chat_id=chat['chat_id']) }}">{{ chat['name'] }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

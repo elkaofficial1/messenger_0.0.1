@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ chat.name }}</title>
+</head>
+<body>
+    <h1>Чат: {{ chat.name }}</h1>
+    <div id="messages">
+        {% for message in messages %}
+            <div>
+                <strong>{{ message.author }}:</strong> {{ message.text }} <em>{{ message.time }}</em>
+                {% if message.media %}
+                    <br>
+                    <img src="{{ url_for('media', filename=message.media) }}" alt="Media" style="max-width: 300px;">
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <form action="{{ url_for('send_message', chat_id=chat.chat_id) }}" method="POST" enctype="multipart/form-data">
+        <textarea name="text" required></textarea>
+        <br>
+        <input type="file" name="media" accept="image/*,video/*">
+        <br>
+        <button type="submit">Отправить</button>
+    </form>
+
+    <a href="{{ url_for('chat_page') }}">Назад к чатам</a>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Пользователи</h1>
+    <input type="text" id="search" placeholder="Поиск по пользователям...">
+    <ul id="user-list">
+        {% for username, info in users.items() %}
+        <li><a href="{{ url_for('user_profile', username=username) }}">{{ username }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        $("#search").on("input", function() {
+            var searchValue = $(this).val().toLowerCase();
+            $("#user-list li").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(searchValue) > -1);
+            });
+        });
+    </script>
+</body>
+</html>

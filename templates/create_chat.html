@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать чат</title>
+</head>
+<body>
+    <h1>Создать чат</h1>
+    <form action="{{ url_for('create_chat') }}" method="POST">
+        <label for="chat_name">Название чата:</label>
+        <input type="text" name="chat_name" required>
+        <br>
+        <label for="participants">Участники:</label>
+        <select name="participants" multiple>
+            {% for user in users %}
+                <option value="{{ user }}">{{ user }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit">Создать</button>
+    </form>
+
+    <a href="{{ url_for('chat_page') }}">Назад к чатам</a>
+</body>
+</html>

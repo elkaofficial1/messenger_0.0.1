@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль {{ username }}</title>
+</head>
+<body>
+    <h1>Профиль {{ username }}</h1>
+    <p>Имя: {{ user_info.first_name }}</p>
+    <p>Фамилия: {{ user_info.last_name }}</p>
+    <p>Возраст: {{ user_info.age }}</p>
+    <p>О себе: {{ user_info.about_me }}</p>  <!-- Добавлено поле "О себе" -->
+    <a href="{{ url_for('edit_profile') }}">Редактировать профиль</a>
+    <a href="{{ url_for('users_page') }}">Назад к пользователям</a>
+</body>
+</html>
