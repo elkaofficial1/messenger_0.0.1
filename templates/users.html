@@ -10,7 +10,7 @@
     <input type="text" id="search" placeholder="Поиск по пользователям...">
     <ul id="user-list">
         {% for username, info in users.items() %}
-        <li><a href="{{ url_for('user_profile', username=username) }}">{{ username }}</a></li>
+        <li><a href="{{ url_for('user_profile', username=username) }}">{{ username }}  </a><button><a href="{{ url_for('start_dm', recipient_username=username) }}">ЛС</a></button></li>
         {% endfor %}
     </ul>
 
