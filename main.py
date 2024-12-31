@@ -281,6 +281,42 @@ def edit_profile():
     return render_template("edit_profile.html", user_info=user_info)
 
 
+# личные сообщения
+@app.route("/start_dm/<recipient_username>", methods=["GET", "POST"])
+def start_dm(recipient_username):
+    if "username" not in session:
+        return redirect(url_for("login"))
+
+    current_user = session["username"]
+    users = load_users()
+
+    if recipient_username not in users:
+        return "User not found", 404
+
+    chats = load_chats()
+
+    # проверка существования ЛС между 2-мя юзерами
+    existing_chat = next((c for c in chats if set(c["participants"]) == {current_user, recipient_username}), None)
+
+    if existing_chat:
+        return redirect(url_for("view_chat", chat_id=existing_chat["chat_id"]))
+
+    else:
+        # создание нового чата
+        chat_id = str(uuid.uuid4())
+        chat = {
+            "chat_id": chat_id,
+            "name": f"{recipient_username} и {current_user}",
+            "participants": [current_user, recipient_username],
+            "messages": []
+        }
+
+        chats.append(chat)
+        save_chats(chats)
+
+        return redirect(url_for("view_chat", chat_id=chat_id))
+
+
 # Маршрут для доступа к медиафайлам
 @app.route('/media/<path:filename>')
 def media(filename):
