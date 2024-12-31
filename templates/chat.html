@@ -4,26 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ chat.name }}</title>
+    <style>
+        .reply-form {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .reply-message {
+            border: 1px solid #aaa;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .user-message {
+            border: 1px solid #007bff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #e7f3ff;
+        }
+        .reply-button {
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function toggleReplyForm(messageId, messageText, messageAuthor) {
+            const form = document.getElementById('reply-form-' + messageId);
+            const isVisible = form.style.display === 'block';
+            form.style.display = isVisible ? 'none' : 'block';
+
+            // Заполняем поле текста оригинальным сообщением
+            if (!isVisible) {
+                const textarea = form.querySelector('textarea[name="text"]');
+                textarea.value = `Ответ на сообщение "${messageText}" от ${messageAuthor}: `;
+                textarea.focus();
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Чат: {{ chat.name }}</h1>
     <div id="messages">
         {% for message in messages %}
-            <div>
-                <strong>{{ message.author }}:</strong> {{ message.text }} <em>{{ message.time }}</em>
-                {% if message.media %}
-                    <br>
-                    <img src="{{ url_for('media', filename=message.media) }}" alt="Media" style="max-width: 300px;">
+            <div class="message" data-message-id="{{ message.id }}">
+                {% if message.reply_to %}
+                    <div class="reply-message">
+                        <strong>Ответ на сообщение "{{ message.original_text }}" от {{ message.original_author }}:</strong> {{ message.text }} <em>от {{ message.author }} в {{ message.time }}</em>
+                    </div>
+                {% else %}
+                    <div class="user-message">
+                        <strong>{{ message.author }}:</strong> {{ message.text }} <em>{{ message.time }}</em>
+                        {% if message.media %}
+                            <br>
+                            <img src="{{ url_for('media', filename=message.media) }}" alt="Media" style="max-width: 300px;">
+                        {% endif %}
+
+                        <span class="reply-button" onclick="toggleReplyForm('{{ message.id }}', '{{ message.text }}', '{{ message.author }}')">Ответить</span>
+
+                        <!-- Форма для ответа на сообщение -->
+                        <div id="reply-form-{{ message.id }}" class="reply-form">
+                            <form action="{{ url_for('send_message', chat_id=chat.chat_id) }}" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="reply_to" value="{{ message.id }}">
+                                <textarea name="text" placeholder="Ваш ответ..." required style="width: 100%; height: 60px;"></textarea>
+                                <br>
+                                <input type="file" name="media" accept="image/*,video/*">
+                                <br>
+                                <button type="submit">Ответить</button>
+                            </form>
+                        </div>
+                    </div>
                 {% endif %}
             </div>
         {% endfor %}
     </div>
 
     <form action="{{ url_for('send_message', chat_id=chat.chat_id) }}" method="POST" enctype="multipart/form-data">
-        <textarea name="text" required></textarea>
+        <textarea name="text" required placeholder="Ваше сообщение..." style="width: 100%; height: 60px;"></textarea>
         <br>
         <input type="file" name="media" accept="image/*,video/*">
         <br>
+        <input type="hidden" name="reply_to" value="">
         <button type="submit">Отправить</button>
     </form>
 
