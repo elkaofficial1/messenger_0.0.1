@@ -195,6 +195,7 @@ def send_message(chat_id):
     username = session["username"]
     text = request.form.get("text")
     media = request.files.get("media")
+    reply_to = request.form.get("reply_to")  # Получаем идентификатор сообщения для ответа
 
     chats = load_chats()
     chat = next((c for c in chats if c["chat_id"] == chat_id), None)
@@ -214,7 +215,8 @@ def send_message(chat_id):
         "author": username,
         "text": text,
         "time": datetime.now().strftime("%H:%M:%S"),
-        "media": None  # Поле для медиафайла
+        "media": None,  # Поле для медиафайла
+        "reply_to": reply_to  # Сохраняем идентификатор сообщения для ответа
     }
 
     # Обработка медиафайла
@@ -281,7 +283,7 @@ def edit_profile():
     return render_template("edit_profile.html", user_info=user_info)
 
 
-# личные сообщения
+# Личные сообщения
 @app.route("/start_dm/<recipient_username>", methods=["GET", "POST"])
 def start_dm(recipient_username):
     if "username" not in session:
@@ -291,18 +293,18 @@ def start_dm(recipient_username):
     users = load_users()
 
     if recipient_username not in users:
-        return "User not found", 404
+        return "User  not found", 404
 
     chats = load_chats()
 
-    # проверка существования ЛС между 2-мя юзерами
+    # Проверка существования ЛС между 2-мя юзерами
     existing_chat = next((c for c in chats if set(c["participants"]) == {current_user, recipient_username}), None)
 
     if existing_chat:
         return redirect(url_for("view_chat", chat_id=existing_chat["chat_id"]))
 
     else:
-        # создание нового чата
+        # Создание нового чата
         chat_id = str(uuid.uuid4())
         chat = {
             "chat_id": chat_id,
@@ -321,6 +323,15 @@ def start_dm(recipient_username):
 @app.route('/media/<path:filename>')
 def media(filename):
     return send_from_directory(MEDIA_FOLDER, filename)
+
+
+# Функция получения сообщения по ID
+def get_message_by_id(chat_id, message_id):
+    messages = load_messages(chat_id)
+    for message in messages:
+        if message.get("id") == message_id:
+            return message
+    return None
 
 
 if __name__ == "__main__":
