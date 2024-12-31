@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ chat_name }}</title>
+</head>
+<body>
+    <h1>{{ chat_name }}</h1>
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <form action="/send_message/{{ chat_id }}" method="post">
+        <input type="text" name="message" placeholder="Type your message">
+        <button type="submit">Отправить</button>
+    </form>
+</body>
+</html>
